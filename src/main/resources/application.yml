@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/newspilot
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: your-qq-email@qq.com
+    password: your-smtp-authorization-code
+    properties:
+      mail.smtp.ssl.enable: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+newspilot:
+  llm:
+    base-url: https://api.deepseek.com/v1
+    api-key: ${DEEPSEEK_API_KEY}
+    model: deepseek-chat
+    temperature: 0.3
+  tavily:
+    api-key: ${TAVILY_API_KEY}
+  briefing:
+    workspace: d:/newspilot-briefings
+  push:
+    to-email: your-target@example.com

@@ -1,0 +1,37 @@
+# ===== Maven 构建产物 =====
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ===== IDE：IntelliJ IDEA =====
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ===== IDE：Eclipse / VSCode =====
+.classpath
+.project
+.settings/
+.factorypath
+.vscode/
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 日志与临时文件 =====
+*.log
+logs/
+tmp/
+*.tmp
+
+# ===== 敏感配置（防止把 API key 提交上去）=====
+.env
+.env.local
+application-local.yml
+application-secret.yml
+
+# ===== 简报工作区（运行时生成，不入库）=====
+newspilot-briefings/
