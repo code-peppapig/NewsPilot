@@ -28,7 +28,9 @@ public class AgentConfig {
     @Value("${newspilot.llm.api-key}")        private String apiKey;
     @Value("${newspilot.llm.model}")          private String model;
     @Value("${newspilot.llm.temperature}")    private double temperature;
-    @Value("${spring.datasource.url}")        private String dsUrl;
+    @Value("${newspilot.pgvector.host}")      private String pgHost;
+    @Value("${newspilot.pgvector.port}")      private int pgPort;
+    @Value("${newspilot.pgvector.database}")  private String pgDatabase;
     @Value("${spring.datasource.username}")   private String dsUser;
     @Value("${spring.datasource.password}")   private String dsPwd;
 
@@ -55,14 +57,10 @@ public class AgentConfig {
      */
     @Bean
     public EmbeddingStore<?> embeddingStore() {
-        // 从 jdbc url 里解析出 host:port，简化配置
-        String host = "localhost";
-        int port = 5432;
-        String db = "newspilot";
         return PgVectorEmbeddingStore.builder()
-                .host(host)
-                .port(port)
-                .database(db)
+                .host(pgHost)
+                .port(pgPort)
+                .database(pgDatabase)
                 .user(dsUser)
                 .password(dsPwd)
                 .table("news_embeddings")

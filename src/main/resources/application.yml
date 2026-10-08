@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/newspilot
+    url: jdbc:postgresql://localhost:54328/newspilot
     username: root
     password: e65K4t7z1
   jpa:
@@ -20,10 +20,6 @@ spring:
     password: your-smtp-authorization-code
     properties:
       mail.smtp.ssl.enable: true
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
 newspilot:
   llm:
@@ -37,3 +33,8 @@ newspilot:
     workspace: d:/newspilot-briefings
   push:
     to-email: your-target@example.com
+  # PgVector 配置：必须跟 spring.datasource 的端口一致，写在 yml 里统一管理
+  pgvector:
+    host: localhost
+    port: 54328
+    database: newspilot

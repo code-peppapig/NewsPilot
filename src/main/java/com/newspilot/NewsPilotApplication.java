@@ -1,7 +1,10 @@
 package com.newspilot;
 
+import com.newspilot.agent.NewsAgentRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -15,4 +18,20 @@ public class NewsPilotApplication {
     public static void main(String[] args) {
         SpringApplication.run(NewsPilotApplication.class, args);
     }
+
+    /**
+     * 冒烟测试入口：启动后立即跑一次 Agent，验证 LLM + 工具链能端到端打通。
+     * 验证通过后可以注释掉这个 Bean。
+     */
+    @Bean
+    public CommandLineRunner smokeTest(NewsAgentRunner runner) {
+        return args -> {
+            String pref = "身份：Java 后端工程师；关注：LangChain、RAG、Agent；关键词：DeepSeek、PgVector";
+            System.out.println("\n===== Agent 开始 =====");
+            String result = runner.run(pref);
+            System.out.println(result);
+            System.out.println("===== Agent 结束 =====\n");
+        };
+    }
 }
+
