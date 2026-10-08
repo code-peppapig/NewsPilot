@@ -35,8 +35,9 @@ public class VectorSearchTools {
     public String semantic_search(@P("查询文本") String query) {
         try {
             Embedding q = embeddingModel.embed(query).content();
+            @SuppressWarnings("unchecked")
             List<EmbeddingMatch<TextSegment>> matches =
-                    store.findRelevant(q, 5, 0.7).matches();
+                    (List<EmbeddingMatch<TextSegment>>) store.findRelevant(q, 5, 0.7);
             if (matches.isEmpty()) {
                 return "NO MATCH";
             }

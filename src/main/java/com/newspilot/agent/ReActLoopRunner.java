@@ -71,7 +71,7 @@ public class ReActLoopRunner {
                 "用户订阅偏好：" + userPreference + "\n请整理今日 AI 新闻简报，并写入工作目录。"));
 
         for (int step = 0; step < MAX_STEPS; step++) {
-            AiMessage resp = chatLanguageModel.generate(msgs);
+            AiMessage resp = chatLanguageModel.generate(msgs).content();
             String text = resp.text();
             msgs.add(resp);
 
