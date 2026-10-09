@@ -115,4 +115,16 @@ public class PageController {
         }
         return "briefings";
     }
+
+    // ==================== 简报详情 ====================
+
+    @GetMapping("/briefing/{id}")
+    public String briefingDetail(@PathVariable Long id, Model model) {
+        Optional<Briefing> briefing = briefingRepository.findById(id);
+        if (briefing.isEmpty()) {
+            return "redirect:/briefings";
+        }
+        model.addAttribute("briefing", briefing.get());
+        return "briefing-detail";
+    }
 }

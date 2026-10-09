@@ -55,9 +55,11 @@
         <div class="card" th:if="${not #lists.isEmpty(briefings)}">
             <h2>简报列表</h2>
             <div th:each="briefing : ${briefings}" class="briefing-item">
-                <div class="briefing-date" th:text="${briefing.briefingDate}">2026-10-09</div>
-                <div class="briefing-preview" th:text="${#strings.abbreviate(briefing.content, 300)}">简报内容预览...</div>
-                <div class="briefing-path" th:text="${briefing.filePath}">d:/newspilot-briefings/AI新闻简报-2026-10-09.md</div>
+                <a th:href="@{/briefing/{id}(id=${briefing.id})}" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="briefing-date" th:text="${briefing.briefingDate}">2026-10-09</div>
+                    <div class="briefing-preview" th:text="${#strings.abbreviate(briefing.content, 300)}">简报内容预览...</div>
+                    <div class="briefing-path" th:text="${briefing.filePath}">d:/newspilot-briefings/AI新闻简报-2026-10-09.md</div>
+                </a>
             </div>
         </div>
 
