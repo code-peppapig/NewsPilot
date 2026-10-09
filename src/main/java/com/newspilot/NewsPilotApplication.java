@@ -24,9 +24,9 @@ public class NewsPilotApplication {
 
     /**
      * 冒烟测试入口：启动后立即跑一次 Agent，验证 LLM + 工具链能端到端打通。
-     * 验证通过后可以注释掉这个 Bean。
+     * 已由 DailyBriefingJob 替代，如需手动验证可取消注释。
      */
-    @Bean
+    // @Bean
     public CommandLineRunner smokeTest(NewsAgentRunner runner,
                                        @Value("${newspilot.briefing.workspace}") String workspace) {
         return args -> {
