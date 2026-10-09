@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史简报 - NewsPilot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f7fa; color: #333; }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 28px; color: #1a1a2e; margin-bottom: 8px; }
+        .header p { color: #666; font-size: 16px; }
+        .nav { display: flex; gap: 16px; justify-content: center; margin-bottom: 40px; }
+        .nav a { padding: 12px 24px; background: #fff; color: #4a6cf7; text-decoration: none; border-radius: 8px; font-weight: 500; border: 1px solid #4a6cf7; transition: all 0.2s; }
+        .nav a:hover { background: #f0f3ff; }
+        .nav a.active { background: #4a6cf7; color: white; }
+        .card { background: white; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; }
+        .card h2 { font-size: 20px; margin-bottom: 20px; color: #1a1a2e; }
+        .briefing-item { border-bottom: 1px solid #eee; padding: 16px 0; }
+        .briefing-item:last-child { border-bottom: none; }
+        .briefing-date { font-weight: 600; color: #4a6cf7; font-size: 16px; }
+        .briefing-preview { color: #666; font-size: 14px; margin-top: 8px; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow: hidden; }
+        .briefing-path { color: #999; font-size: 12px; margin-top: 8px; font-family: monospace; }
+        .empty { text-align: center; color: #999; padding: 40px; }
+        .filter { margin-bottom: 20px; }
+        .filter select { padding: 10px 16px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>历史简报</h1>
+            <p>查看过往生成的 AI 新闻简报</p>
+        </div>
+
+        <div class="nav">
+            <a href="/">首页</a>
+            <a href="/preferences">订阅偏好</a>
+            <a href="/briefings" class="active">历史简报</a>
+        </div>
+
+        <div class="card" th:if="${not #lists.isEmpty(users)}">
+            <div class="filter">
+                <form method="get" action="/briefings">
+                    <select name="userId" onchange="this.form.submit()">
+                        <option value="">全部用户</option>
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"
+                                th:selected="${user.id == selectedUserId}">张三</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="card" th:if="${not #lists.isEmpty(briefings)}">
+            <h2>简报列表</h2>
+            <div th:each="briefing : ${briefings}" class="briefing-item">
+                <div class="briefing-date" th:text="${briefing.briefingDate}">2026-10-09</div>
+                <div class="briefing-preview" th:text="${#strings.abbreviate(briefing.content, 300)}">简报内容预览...</div>
+                <div class="briefing-path" th:text="${briefing.filePath}">d:/newspilot-briefings/AI新闻简报-2026-10-09.md</div>
+            </div>
+        </div>
+
+        <div class="card empty" th:if="${#lists.isEmpty(briefings)}">
+            暂无历史简报，等待定时任务生成第一份简报
+        </div>
+    </div>
+</body>
+</html>

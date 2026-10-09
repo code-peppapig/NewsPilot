@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订阅偏好 - NewsPilot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f7fa; color: #333; }
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 28px; color: #1a1a2e; margin-bottom: 8px; }
+        .header p { color: #666; font-size: 16px; }
+        .nav { display: flex; gap: 16px; justify-content: center; margin-bottom: 40px; }
+        .nav a { padding: 12px 24px; background: #fff; color: #4a6cf7; text-decoration: none; border-radius: 8px; font-weight: 500; border: 1px solid #4a6cf7; transition: all 0.2s; }
+        .nav a:hover { background: #f0f3ff; }
+        .nav a.active { background: #4a6cf7; color: white; }
+        .card { background: white; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; }
+        .card h2 { font-size: 20px; margin-bottom: 20px; color: #1a1a2e; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #444; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #4a6cf7; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .btn { display: inline-block; padding: 12px 32px; background: #4a6cf7; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; }
+        .btn:hover { background: #3a5ce5; }
+        .tip { color: #888; font-size: 13px; margin-top: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>订阅偏好设置</h1>
+            <p>选择你关注的话题和关键词，Agent 将据此筛选内容</p>
+        </div>
+
+        <div class="nav">
+            <a href="/">首页</a>
+            <a href="/preferences" class="active">订阅偏好</a>
+            <a href="/briefings">历史简报</a>
+        </div>
+
+        <div class="card">
+            <h2>选择用户</h2>
+            <form method="get" action="/preferences">
+                <div class="form-group">
+                    <label for="userId">用户</label>
+                    <select id="userId" name="userId" onchange="this.form.submit()">
+                        <option value="" th:if="${selectedUserId == null}" selected>请选择用户</option>
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name + ' (' + user.email + ')'}"
+                                th:selected="${user.id == selectedUserId}">张三 (zhangsan@qq.com)</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" th:if="${selectedUserId != null}">
+            <h2>设置偏好</h2>
+            <form method="post" action="/preferences">
+                <input type="hidden" name="userId" th:value="${selectedUserId}">
+                <div class="form-group">
+                    <label for="topics">关注话题（逗号分隔）</label>
+                    <textarea id="topics" name="topics" placeholder="LangChain, RAG, Agent, 大模型" th:text="${subscription != null ? subscription.topics : ''}"></textarea>
+                    <div class="tip">例如：LangChain, RAG, Agent, 大模型</div>
+                </div>
+                <div class="form-group">
+                    <label for="keywords">关注关键词（逗号分隔）</label>
+                    <textarea id="keywords" name="keywords" placeholder="DeepSeek, PgVector" th:text="${subscription != null ? subscription.keywords : ''}"></textarea>
+                    <div class="tip">例如：DeepSeek, PgVector</div>
+                </div>
+                <button type="submit" class="btn">保存偏好</button>
+            </form>
+        </div>
+
+        <div class="card" th:if="${#lists.isEmpty(users)}">
+            <p>暂无用户，请先在<a href="/">首页</a>创建用户。</p>
+        </div>
+    </div>
+</body>
+</html>
