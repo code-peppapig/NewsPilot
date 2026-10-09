@@ -6,6 +6,7 @@ import com.newspilot.entity.Subscription;
 import com.newspilot.repository.AppUserRepository;
 import com.newspilot.repository.BriefingRepository;
 import com.newspilot.repository.SubscriptionRepository;
+import com.newspilot.service.MarkdownService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,16 @@ public class PageController {
     private final AppUserRepository appUserRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final BriefingRepository briefingRepository;
+    private final MarkdownService markdownService;
 
     public PageController(AppUserRepository appUserRepository,
                           SubscriptionRepository subscriptionRepository,
-                          BriefingRepository briefingRepository) {
+                          BriefingRepository briefingRepository,
+                          MarkdownService markdownService) {
         this.appUserRepository = appUserRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.briefingRepository = briefingRepository;
+        this.markdownService = markdownService;
     }
 
     // ==================== 首页：填写身份信息 ====================
@@ -124,7 +128,10 @@ public class PageController {
         if (briefing.isEmpty()) {
             return "redirect:/briefings";
         }
-        model.addAttribute("briefing", briefing.get());
+        Briefing b = briefing.get();
+        // 将 Markdown 转换为 HTML 用于页面展示
+        model.addAttribute("briefing", b);
+        model.addAttribute("briefingHtml", markdownService.toHtml(b.getContent()));
         return "briefing-detail";
     }
 }

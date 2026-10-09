@@ -43,8 +43,8 @@
             <span th:if="${briefing.filePath != null}">📁 文件：<span th:text="${briefing.filePath}">path</span></span>
         </div>
 
-        <div class="content" th:utext="${briefing.content}">
-            <!-- 简报 Markdown 内容渲染在这里 -->
+        <div class="content" th:utext="${briefingHtml}">
+            <!-- 简报 HTML 内容渲染在这里 -->
         </div>
     </div>
 </body>

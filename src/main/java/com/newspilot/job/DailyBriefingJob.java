@@ -49,10 +49,10 @@ public class DailyBriefingJob {
     }
 
     /**
-     * 每天 08:00:00 执行（服务器本地时间）。
+     * 每分钟执行一次（测试/演示用）。
      * cron 表达式：秒 分 时 日 月 周
      */
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void generateDailyBriefing() {
         log.info("===== DailyBriefingJob 开始 =====");
 
