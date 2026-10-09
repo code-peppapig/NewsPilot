@@ -16,8 +16,8 @@ spring:
   mail:
     host: smtp.qq.com
     port: 465
-    username: your-qq-email@qq.com
-    password: your-smtp-authorization-code
+    username: 179909013@qq.com
+    password: pccouidazibcbhec
     properties:
       mail.smtp.ssl.enable: true
 
@@ -32,7 +32,7 @@ newspilot:
   briefing:
     workspace: d:/newspilot-briefings
   push:
-    to-email: your-target@example.com
+    to-email: 179909013@qq.com
   # PgVector 配置：必须跟 spring.datasource 的端口一致，写在 yml 里统一管理
   pgvector:
     host: localhost

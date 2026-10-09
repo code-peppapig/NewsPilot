@@ -3,6 +3,7 @@ package com.newspilot.job;
 import com.newspilot.agent.NewsAgentRunner;
 import com.newspilot.entity.Briefing;
 import com.newspilot.repository.BriefingRepository;
+import com.newspilot.service.EmailPushService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,21 +24,25 @@ public class DailyBriefingJob {
 
     private final NewsAgentRunner newsAgentRunner;
     private final BriefingRepository briefingRepository;
+    private final EmailPushService emailPushService;
 
     @Value("${newspilot.briefing.workspace}")
     private String workspace;
 
     public DailyBriefingJob(NewsAgentRunner newsAgentRunner,
-                            BriefingRepository briefingRepository) {
+                            BriefingRepository briefingRepository,
+                            EmailPushService emailPushService) {
         this.newsAgentRunner = newsAgentRunner;
         this.briefingRepository = briefingRepository;
+        this.emailPushService = emailPushService;
     }
 
     /**
      * 每天 08:00:00 执行（服务器本地时间）。
      * cron 表达式：秒 分 时 日 月 周
+     * 临时改为每分钟执行（"0 * * * * ?"），验证完成后改回 "0 0 8 * * ?"
      */
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void generateDailyBriefing() {
         log.info("===== DailyBriefingJob 开始 =====");
 
@@ -52,6 +57,7 @@ public class DailyBriefingJob {
         try {
             String content = newsAgentRunner.run(userPreference);
             saveBriefing(content);
+            pushBriefingEmail(content);
             log.info("===== DailyBriefingJob 完成 =====");
         } catch (Exception e) {
             log.error("===== DailyBriefingJob 失败 =====", e);
@@ -71,5 +77,10 @@ public class DailyBriefingJob {
 
         briefingRepository.save(briefing);
         log.info("简报已入库：date={} path={}", today, filePath);
+    }
+
+    private void pushBriefingEmail(String content) {
+        String subject = "AI 新闻简报 - " + LocalDate.now();
+        emailPushService.pushBriefing(subject, content);
     }
 }
