@@ -20,9 +20,6 @@ public class EmailPushService {
     private final JavaMailSender mailSender;
     private final MarkdownService markdownService;
 
-    @Value("${newspilot.push.to-email}")
-    private String toEmail;
-
     @Value("${spring.mail.username}")
     private String fromEmail;
 
@@ -34,10 +31,11 @@ public class EmailPushService {
     /**
      * 发送简报邮件（HTML 格式，Markdown 已渲染）。
      *
+     * @param toEmail 收件人邮箱
      * @param subject 邮件主题，如 "AI 新闻简报 - 2026-10-09"
      * @param markdownContent 简报 Markdown 内容
      */
-    public void pushBriefing(String subject, String markdownContent) {
+    public void pushBriefing(String toEmail, String subject, String markdownContent) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

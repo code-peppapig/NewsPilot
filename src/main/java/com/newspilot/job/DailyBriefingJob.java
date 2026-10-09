@@ -92,7 +92,8 @@ public class DailyBriefingJob {
         try {
             String content = newsAgentRunner.run(userPreference);
             saveBriefing(content, null);
-            pushBriefingEmail(content);
+            // 默认情况用配置邮箱（向后兼容）
+            pushBriefingEmail(null, content);
             log.info("===== DailyBriefingJob 完成 =====");
         } catch (Exception e) {
             log.error("===== DailyBriefingJob 失败 =====", e);
@@ -110,7 +111,8 @@ public class DailyBriefingJob {
 
         String content = newsAgentRunner.run(userPreference);
         saveBriefing(content, user.getId());
-        pushBriefingEmail(content);
+        // 发送到用户自己的邮箱
+        pushBriefingEmail(user.getEmail(), content);
     }
 
     private void saveBriefing(String content, Long userId) {
@@ -127,8 +129,9 @@ public class DailyBriefingJob {
         log.info("简报已入库：userId={} date={} path={}", userId, today, filePath);
     }
 
-    private void pushBriefingEmail(String content) {
+    private void pushBriefingEmail(String toEmail, String content) {
         String subject = "AI 新闻简报 - " + LocalDate.now();
-        emailPushService.pushBriefing(subject, content);
+        // toEmail 为 null 时用 application.yml 配置的默认邮箱
+        emailPushService.pushBriefing(toEmail, subject, content);
     }
 }
