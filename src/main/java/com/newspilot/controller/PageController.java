@@ -108,13 +108,13 @@ public class PageController {
         model.addAttribute("users", users);
 
         if (userId != null) {
-            List<Briefing> briefings = briefingRepository.findByUserIdOrderByBriefingDateDesc(userId);
+            List<Briefing> briefings = briefingRepository.findByUserIdOrderByCreatedAtDesc(userId);
             model.addAttribute("briefings", briefings);
             model.addAttribute("selectedUserId", userId);
         } else {
-            // 展示所有简报
+            // 展示所有简报，按创建时间降序（精确到秒）
             List<Briefing> briefings = briefingRepository.findAll();
-            briefings.sort((a, b) -> b.getBriefingDate().compareTo(a.getBriefingDate()));
+            briefings.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
             model.addAttribute("briefings", briefings);
         }
         return "briefings";

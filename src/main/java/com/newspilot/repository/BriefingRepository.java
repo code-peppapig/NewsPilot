@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface BriefingRepository extends JpaRepository<Briefing, Long> {
 
-    List<Briefing> findByUserIdOrderByBriefingDateDesc(Long userId);
+    List<Briefing> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     boolean existsByUserIdAndBriefingDate(Long userId, LocalDate briefingDate);
 }
