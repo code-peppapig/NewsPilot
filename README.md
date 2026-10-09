@@ -6,7 +6,7 @@
 
 - **Agent 自主决策**：LLM 自主决定调用哪些工具、调用几次、何时停止，非硬编码线性流程
 - **双模式 Agent 循环**：AiServices 全自动 function calling + 手写 ReAct 兜底
-- **5 个核心工具**：list_dir / read_file / write_file / search_content / bash
+- **7 个核心工具**：5 个基础工具 + 2 个扩展工具（tavily_search / semantic_search）
 - **双路检索**：PgVector 语义检索 + 关键词检索，避免内容重复
 - **定时推送**：每天 08:00 自动生成简报并邮件推送（可配置为每分钟测试）
 - **用户体系**：支持多用户，每人独立订阅偏好（话题、关键词）
@@ -143,17 +143,24 @@ LLM 在对话中自主决定调哪个工具、调几次、何时停。
 
 当姿势 A 失败时，自动降级到手写 Thought→Action→Observation 循环，最多 8 步。
 
-### 5 个工具
+### 7 个工具
 
-| 工具 | 作用 |
-|---|---|
-| `list_dir(path)` | 列出目录内容 |
-| `read_file(path)` | 读取文件 |
-| `search_content(keyword, dir)` | 按关键词搜索目录下文件 |
-| `write_file(path, content)` | 写入文件 |
-| `bash(command)` | 执行 shell 命令（含危险命令拦截） |
+#### 基础工具（5 个）
 
-额外扩展：`tavily_search`（Tavily API 搜索）、`semantic_search`（PgVector 语义检索）
+| 工具 | 作用 | 应用场景 |
+|---|---|---|
+| `list_dir(path)` | 列出目录内容 | 检查 `d:/newspilot-briefings/` 已有简报，避免重复 |
+| `read_file(path)` | 读取文件 | 读取抓取的新闻原文、历史简报 |
+| `search_content(keyword, dir)` | 按关键词搜索目录下文件 | 在简报目录搜特定话题，检查是否已覆盖 |
+| `write_file(path, content)` | 写入文件 | 把整理好的简报 Markdown 写到磁盘 |
+| `bash(command)` | 执行 shell 命令（含危险命令拦截） | `curl` 抓网页、`grep` 检索、调搜索 API |
+
+#### 扩展工具（2 个）
+
+| 工具 | 作用 | 应用场景 |
+|---|---|---|
+| `tavily_search(query)` | 调 Tavily API 搜索 | 让模型自主决定搜什么关键词、搜几次，获取最新 AI 新闻 |
+| `semantic_search(query)` | PgVector 语义检索 | 用向量相似度找历史简报片段，避免与往期内容重复 |
 
 ### 数据流
 
